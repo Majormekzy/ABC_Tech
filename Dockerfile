@@ -2,7 +2,7 @@
 FROM tomcat:9.0.72-jdk11-corretto-al2
 
 # Copy the .war file to the webapps directory of Tomcat
-COPY your-app.war /usr/local/tomcat/webapps/
+COPY **/*.war /usr/local/tomcat/webapps/
 
 # Set the environment variables
 ENV CATALINA_HOME /usr/local/tomcat
