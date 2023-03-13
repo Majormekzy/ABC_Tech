@@ -1,36 +1,38 @@
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
-    name: abc_tech_pro
+  name: abc_tech_pro
 spec:
-    replicas: 2
-    minReadySeconds: 45
-    strategy:
-        type: RollingUpdate
-        rollingUpdate:
-            maxUnavailable: 1
-            maxSurge: 2
-    selector:
-        matchLabels:
-            app: abc_tech_pro
-    template:
-        metadata:
-            labels:
-                app: abc_tech_pro
-        spec:
-            containers:
-                - image: majormekzy/abc_technologies:latest
-                  name: app
----
-
-kind: Service
-apiVersion: v1
-metadata:
-    name: abc_tech_service
-spec:
-    type: NodePort
-    selector:
+  selector:
+    matchLabels:
+      app: abc_tech_pro
+  template:
+    metadata:
+      labels:
         app: abc_tech_pro
-    ports:
-        - port: 80 #cluster port
-          targetPort: 8080 #container image port
+    spec:
+      containers:
+      - name: abc_tech_pro
+        image:majormekzy/abc_technologies:latest
+        command: ["/bin/sh"]
+        args: ["-c","sh /usr/local/tomcat/bin/startup.sh;while true; do echo hello; sleep 10;done"]
+        ports:
+            - name: http
+              containerPort: 8080
+  replicas: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: abc_tech_pro_service
+  labels:
+    app: abc_tech_pro
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 31884
+    protocol: TCP
+    name: http
+  selector:
+    app: abc_tech_pro
