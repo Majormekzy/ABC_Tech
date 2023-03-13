@@ -1,2 +1,2 @@
 [webserver]
-172-31-22-199 
+172-31-22-199 ansible_user=ec2-user
